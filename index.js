@@ -9,6 +9,7 @@ module.exports = function(rest) {
     add: require('./helper/add')(rest),
     batchAdd: require('./helper/batch-add')(rest),
     remove: require('./helper/remove')(rest),
-    statistics: require('./helper/statistics')(rest)
+    statistics: require('./helper/statistics')(rest),
+    tools: require('./lib/utils')
   };
 };

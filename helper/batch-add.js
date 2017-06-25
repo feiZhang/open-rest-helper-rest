@@ -42,6 +42,7 @@ module.exports = function(rest) {
         req.params = _.extend(params, origParams);
         attr = U.pickParams(req, cols || Model.writableCols, Model)
         if (Model.rawAttributes.creatorId) attr.creatorId = req.user.id;
+        if (Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
         if (Model.rawAttributes.clientIp) attr.clientIp = rest.utils.clientIp(req);
 
         /** 构建实例 */

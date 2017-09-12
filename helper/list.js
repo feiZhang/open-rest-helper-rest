@@ -18,9 +18,16 @@ var list = function(Model, opt, allowAttrs, hook) {
 
   return function(req, res, next) {
     var options = opt ? req.hooks[opt] : U.findAllOpts(Model, req.params);
+    // 增加自定义的 options 
+    var addr_opt = req.params.addr_opt;
+    if (addr_opt) {
+      if (addr_opt.order) options.order = options.order ? options.order.concat(addr_opt.order) : addr_opt;
+      if (addr_opt.where) options.where = options.where ? Object.assign({}, options.where, addr_opt.where) : addr_opt.where;
+    }
     var countOpt = {};
     if (options.where) countOpt.where = options.where;
-    if (options.include) countOpt.include = options.include;
+    // 增加判定，是否引入include进行count
+    if (req.params.count_include && options.include) countOpt.include = options.include;
     // 是否忽略总条目数，这样就可以不需要count了。在某些时候可以
     // 提高查询速度
     var ignoreTotal = req.params._ignoreTotal === 'yes';

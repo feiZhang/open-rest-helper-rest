@@ -21,8 +21,8 @@ var list = function(Model, opt, allowAttrs, hook) {
     // 增加自定义的 options 
     var addr_opt = req.params.addr_opt;
     if (addr_opt) {
-      if (addr_opt.order) options.order = options.order ? options.order.concat(addr_opt.order) : addr_opt;
-      if (addr_opt.where) options.where = options.where ? Object.assign({}, options.where, addr_opt.where) : addr_opt.where;
+      if (addr_opt.order) options.order = options.order.concat(addr_opt.order);
+      if (addr_opt.where) options.where = Object.assign({}, options.where, addr_opt.where);
     }
     var countOpt = {};
     if (options.where) countOpt.where = options.where;

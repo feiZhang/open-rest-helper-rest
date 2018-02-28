@@ -1,144 +1,139 @@
-var assert      = require('assert')
-  , rest        = require('open-rest')
-  , _           = require('lodash')
-  , Sequelize   = rest.Sequelize
-  , helper      = require('../')(rest);
+const assert = require('assert');
+const rest = require('open-rest');
+const _ = require('lodash');
+const om = require('open-rest-with-mysql');
 
-var sequelize = new Sequelize();
-var Model = sequelize.define('book', {
+om(rest);
+const Sequelize = rest.Sequelize;
+const helper = require('../')(rest);
+
+const sequelize = new Sequelize();
+const Model = sequelize.define('book', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
-  name: Sequelize.STRING(100),
-  age: Sequelize.INTEGER.UNSIGNED
+  name: Sequelize.STRING,
+  age: Sequelize.INTEGER.UNSIGNED,
 });
 
-describe("open-rest-helper-rest-add", function() {
-
-  describe("Argument validate error", function() {
-
-    it("Model argument unset", function(done) {
-      assert.throws(function() {
+describe('open-rest-helper-rest-add', () => {
+  describe('Argument validate error', () => {
+    it('Model argument unset', (done) => {
+      assert.throws(() => {
         helper.add();
-      }, function(err) {
-        return err instanceof Error && err.message === 'Model must be a class of Sequelize defined'
-      });
+      }, (err) => (
+        err instanceof Error && err.message === 'Model must be a class of Sequelize defined'
+      ));
       done();
     });
 
-    it("Model argument type error", function(done) {
-      assert.throws(function() {
+    it('Model argument type error', (done) => {
+      assert.throws(() => {
         helper.add({});
-      }, function(err) {
-        return err instanceof Error && err.message === 'Model must be a class of Sequelize defined'
-      });
+      }, (err) => (
+        err instanceof Error && err.message === 'Model must be a class of Sequelize defined'
+      ));
       done();
     });
 
-    it("cols type error", function(done) {
-      assert.throws(function() {
+    it('cols type error', (done) => {
+      assert.throws(() => {
         helper.add(Model, 'string');
-      }, function(err) {
-        return err instanceof Error && err.message === "Allow writed attrs's name array"
-      });
+      }, (err) => err instanceof Error && err.message === "Allow writed attrs's name array");
       done();
     });
 
-    it("cols item type error", function(done) {
-      assert.throws(function() {
+    it('cols item type error', (done) => {
+      assert.throws(() => {
         helper.add(Model, [null]);
-      }, function(err) {
-        return err instanceof Error && err.message === 'Every item in cols must be a string.';
-      });
+      }, (err) => err instanceof Error && err.message === 'Every item in cols must be a string.');
       done();
     });
 
-    it("cols item non-exists error", function(done) {
-      assert.throws(function() {
+    it('cols item non-exists error', (done) => {
+      assert.throws(() => {
         helper.add(Model, ['id', 'price']);
-      }, function(err) {
-        return err instanceof Error && err.message === 'Attr non-exists: price';
-      });
+      }, (err) => err instanceof Error && err.message === 'Attr non-exists: price');
       done();
     });
 
-    it("hook argument type error", function(done) {
-      assert.throws(function() {
+    it('hook argument type error', (done) => {
+      assert.throws(() => {
         helper.add(Model, null, {});
-      }, function(err) {
-        return err instanceof Error && err.message === 'Added instance will hook on req.hooks[hook], so `hook` must be a string'
+      }, (err) => {
+        const msg = 'Added instance will hook on req.hooks[hook], so `hook` must be a string';
+        return err instanceof Error && err.message === msg;
       });
       done();
     });
 
-    it("attrs type error", function(done) {
-      assert.throws(function() {
+    it('attrs type error', (done) => {
+      assert.throws(() => {
         helper.add(Model, null, null, 'string');
-      }, function(err) {
-        return err instanceof Error && err.message === 'Attach other data dict. key => value, value is req\'s path';
+      }, (err) => {
+        const msg = 'Attach other data dict. key => value, value is req\'s path';
+        return err instanceof Error && err.message === msg;
       });
 
       done();
     });
 
-    it("attrs check error", function(done) {
-      assert.throws(function() {
-        helper.add(Model, null, null, {string: []});
-      }, function(err) {
-        return err instanceof Error && err.message === 'The attachs structure is key = > value, value must be a string';
+    it('attrs check error', (done) => {
+      assert.throws(() => {
+        helper.add(Model, null, null, { string: [] });
+      }, (err) => {
+        const msg = 'The attachs structure is key = > value, value must be a string';
+        return err instanceof Error && err.message === msg;
       });
 
       done();
     });
-
   });
 
-  describe("All aguments validate passed", function() {
+  describe('All aguments validate passed', () => {
+    it('normal cols set, hook set', (done) => {
+      const add = helper.add(Model, ['name', 'age'], 'user', { address: 'hooks.address' });
 
-    it("normal cols set, hook set", function(done) {
-
-      var add = helper.add(Model, ['name', 'age'], 'user', {address: 'hooks.address'});
-
-      var req = {
+      const req = {
         hooks: {
-          address: '北京市昌平区'
+          address: '北京市昌平区',
         },
         params: {
           id: 99,
           name: 'Redstone Zhao',
-          age: 36
-        }
+          age: 36,
+        },
       };
 
-      var res = {
-        send: function(statusCode, data) {
+      const res = {
+        send(statusCode, data) {
           assert.equal(201, statusCode);
           assert.deepEqual({
             id: 1,
             name: 'Redstone Zhao',
             age: 36,
-            address: '北京市昌平区'
+            address: '北京市昌平区',
           }, data);
-        }
+        },
       };
 
-      Model.build = function(attrs) {
-        return _.extend({}, attrs, {
-          save: function() {
-            return new Promise(function(resolve, reject) {
-              setTimeout(function() {
+      Model.build = (attrs) => (
+        _.extend({}, attrs, {
+          save() {
+            return new Promise((resolve) => {
+              setTimeout(() => {
                 resolve(_.extend({}, attrs, {
                   id: 1,
                 }));
               }, 10);
             });
-          }
-        });
-      };
+          },
+        })
+      );
 
-      add(req, res, function(error) {
+      add(req, res, (error) => {
         try {
           assert.equal(null, error);
 
@@ -147,51 +142,49 @@ describe("open-rest-helper-rest-add", function() {
           done(e);
         }
       });
-
     });
 
-    it("normal cols set, hook unset", function(done) {
+    it('normal cols set, hook unset', (done) => {
+      const add = helper.add(Model, ['name', 'age'], null, { address: 'hooks.address' });
 
-      var add = helper.add(Model, ['name', 'age'], null, {address: 'hooks.address'});
-
-      var req = {
+      const req = {
         hooks: {
-          address: '北京市昌平区'
+          address: '北京市昌平区',
         },
         params: {
           id: 99,
           name: 'Redstone Zhao',
-          age: 36
-        }
+          age: 36,
+        },
       };
 
-      var res = {
-        send: function(statusCode, data) {
+      const res = {
+        send(statusCode, data) {
           assert.equal(201, statusCode);
           assert.deepEqual({
             id: 1,
             name: 'Redstone Zhao',
             age: 36,
-            address: '北京市昌平区'
+            address: '北京市昌平区',
           }, data);
-        }
+        },
       };
 
-      Model.build = function(attrs) {
-        return _.extend({}, attrs, {
-          save: function() {
-            return new Promise(function(resolve, reject) {
-              setTimeout(function() {
+      Model.build = (attrs) => (
+        _.extend({}, attrs, {
+          save() {
+            return new Promise((resolve) => {
+              setTimeout(() => {
                 resolve(_.extend({}, attrs, {
                   id: 1,
                 }));
               }, 10);
             });
-          }
-        });
-      };
+          },
+        })
+      );
 
-      add(req, res, function(error) {
+      add(req, res, (error) => {
         try {
           assert.equal(null, error);
 
@@ -200,49 +193,47 @@ describe("open-rest-helper-rest-add", function() {
           done(e);
         }
       });
-
     });
 
-    it("Has error when beforeAdd", function(done) {
+    it('Has error when beforeAdd', (done) => {
+      const add = helper.add(Model, ['name', 'age'], null, { address: 'hooks.address' });
 
-      var add = helper.add(Model, ['name', 'age'], null, {address: 'hooks.address'});
-
-      var req = {
+      const req = {
         hooks: {
-          address: '北京市昌平区'
+          address: '北京市昌平区',
         },
         params: {
           id: 99,
           name: 'Redstone Zhao',
-          age: 36
-        }
+          age: 36,
+        },
       };
 
-      var res = {
-        send: function(statusCode, data) {
+      const res = {
+        send(statusCode, data) {
           assert.equal(201, statusCode);
           assert.deepEqual({
             id: 1,
             name: 'Redstone Zhao',
             age: 36,
-            address: '北京市昌平区'
+            address: '北京市昌平区',
           }, data);
-        }
+        },
       };
 
-      Model.build = function(attrs) {
-        return _.extend({}, attrs, {
-          save: function() {
-            return new Promise(function(resolve, reject) {
-              setTimeout(function() {
+      Model.build = (attrs) => (
+        _.extend({}, attrs, {
+          save() {
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
                 reject(Error('Hello world'));
               }, 10);
             });
-          }
-        });
-      };
+          },
+        })
+      );
 
-      add(req, res, function(error) {
+      add(req, res, (error) => {
         try {
           assert.equal('Hello world', error.message);
           assert.ok(error instanceof Error);
@@ -252,9 +243,6 @@ describe("open-rest-helper-rest-add", function() {
           done(e);
         }
       });
-
     });
-
   });
-
 });

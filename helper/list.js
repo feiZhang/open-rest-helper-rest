@@ -40,7 +40,7 @@ var list = function(Model, opt, allowAttrs, hook) {
         Model.findAndCountAll(options).then(function (result) {
           ls = U.listAttrFilter(result.rows, allowAttrs);
           if (!ignoreTotal) res.header("X-Content-Record-Total", result.count);
-          if (!hook && req.params.attrs) {
+          if (req.params.attrs) {
             ls = U.listAttrFilter(ls, req.params.attrs.split(','));
           }
           if (hook) {

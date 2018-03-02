@@ -27,22 +27,22 @@
   },
   "homepage": "https://github.com/open-node/open-rest-helper-rest#readme",
   "dependencies": {
-    "async": "^2.0.1",
+    "async": "^2.6.0",
     "func-delegate": "^0.3.0",
-    "lodash": "*",
-    "mysql": "*"
+    "lodash": "^4.17.5",
+    "mysql2": "^1.5.2"
   },
   "devDependencies": {
-    "open-rest-with-mysql": "*",
-    "open-rest": "*",
     "babel-eslint": "^7.1.1",
+    "codecov": "^1.0.1",
     "eslint": "^3.10.0",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
     "mocha": "^3.0.2",
-    "codecov": "^1.0.1",
-    "nyc": "^10.0.0"
+    "nyc": "^10.0.0",
+    "open-rest": "*",
+    "open-rest-with-mysql": "*"
   }
 }

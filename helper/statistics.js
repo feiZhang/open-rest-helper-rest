@@ -34,7 +34,7 @@ module.exports = (rest) => {
 
   const schemas = [{
     name: 'Model',
-    type: Sequelize.Model,
+    type: Object,
     message: 'Model must be a class of Sequelize defined',
   }, {
     name: 'where',

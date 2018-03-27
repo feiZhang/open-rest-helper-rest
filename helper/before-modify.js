@@ -11,7 +11,7 @@ const _ = require('lodash');
 const beforeModify = (Model, hook, cols) => (
   (req, res, next) => {
     const model = req.hooks[hook];
-    const _cols = cols || Model.editableCols || Model.writableCols;
+    const _cols = cols || Model.editableCols || Model.writableCols || Model.rawAttributes;
     const attr = U.pickParams(req, _cols, Model);
     delete attr.id;
     _.each(attr, (v, k) => {

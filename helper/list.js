@@ -23,8 +23,8 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
     const countOpt = {};
     // 同时使用 findAllOpts生成条件，和手动传入条件。 
     if (_options) {
-      if (_options.order) options.order = options.order.concat(_options.order);
-      if (_options.where) options.where = Object.assign({}, options.where, _options.where);
+      if (_options.order) options.order = options.order ? options.order.concat(_options.order) : _options.order;
+      if (_options.where) options.where = options.where ? Object.assign({}, options.where, _options.where) : _options.where;
     }
     if (options.where) countOpt.where = options.where;
     // 增加判定，是否引入include进行count

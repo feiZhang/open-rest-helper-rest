@@ -12,17 +12,16 @@ module.exports = (rest) => {
       // 如果没有变化，则不需要保存，也不需要记录日志
       if (!changed) {
         req._resourceNotChanged = true;
-        res.header('X-Content-Resource-Status', 'Unchanged');
         if (req.resNoSend === true) {
-          req.resNoSend = model.get();
         } else {
+          res.header('X-Content-Resource-Status', 'Unchanged');
           res.send(model);
         }
         return next();
       }
       return model.save({ fields: changed }).then((mod) => {
         if (req.resNoSend === true) {
-          req.resNoSend = mod.get();
+          req.hooks[hook] = mod;
         } else {
           res.send(mod);
         }

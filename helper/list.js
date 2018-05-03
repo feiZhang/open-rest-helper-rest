@@ -32,12 +32,12 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
     // 是否忽略总条目数，这样就可以不需要count了。在某些时候可以
     // 提高查询速度
     const ignoreTotal = req.params._ignoreTotal === 'yes';
-    getTotal(Model, countOpt, ignoreTotal, (error, count) => {
-      if (error) return next(error);
-      if (ignoreTotal || count) {
-        return Model.findAll(options).then((result) => {
-          let ls = U.listAttrFilter(result, allowAttrs);
-          if (!ignoreTotal) res.header('X-Content-Record-Total', count);
+    // getTotal(Model, countOpt, ignoreTotal, (error, count) => {
+    //   if (error) return next(error);
+    //   if (ignoreTotal || count) {
+        return Model.findAndCountAll(options).then((result) => {
+          let ls = U.listAttrFilter(result.rows, allowAttrs);
+          if (!ignoreTotal) res.header('X-Content-Record-Total', result.count);
           if (params.attrs) {
             ls = U.listAttrFilter(ls, params.attrs.split(','));
           }
@@ -48,15 +48,15 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
           }
           next();
         }).catch(next);
-      }
-      res.header('X-Content-Record-Total', 0);
-      if (hook) {
-        req.hooks[hook] = [];
-      } else {
-        res.send([]);
-      }
-      return next();
-    });
+    //   }
+    //   res.header('X-Content-Record-Total', 0);
+    //   if (hook) {
+    //     req.hooks[hook] = [];
+    //   } else {
+    //     res.send([]);
+    //   }
+    //   return next();
+    // });
   }
 );
 

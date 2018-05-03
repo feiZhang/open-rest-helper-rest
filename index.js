@@ -8,6 +8,7 @@ const add = require('./helper/add');
 const batchAdd = require('./helper/batch-add');
 const remove = require('./helper/remove');
 const statistics = require('./helper/statistics');
+const utils = require('./lib/utils');
 
 module.exports = (rest) => {
   rest.helper.rest = {
@@ -21,6 +22,7 @@ module.exports = (rest) => {
     batchAdd: batchAdd(rest),
     remove: remove(rest),
     statistics: statistics(rest),
+    restUtils: utils
   };
   return rest.helper.rest;
 };

@@ -35,8 +35,10 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
     // getTotal(Model, countOpt, ignoreTotal, (error, count) => {
     //   if (error) return next(error);
     //   if (ignoreTotal || count) {
+        if (Array.isArray(allowAttrs) && allowAttrs.length > 0) options.attributes = allowAttrs;
         return Model.findAndCountAll(options).then((result) => {
-          let ls = U.listAttrFilter(result.rows, allowAttrs);
+          // let ls = U.listAttrFilter(result.rows, allowAttrs);
+          let ls = result.rows;
           if (!ignoreTotal) res.header('X-Content-Record-Total', result.count);
           if (params.attrs) {
             ls = U.listAttrFilter(ls, params.attrs.split(','));

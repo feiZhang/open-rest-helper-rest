@@ -13,7 +13,7 @@ module.exports = (rest) => {
    */
   const beforeAdd = (Model, cols, hook) => (
     (req, res, next) => {
-      const attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
+      let attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
 
       // 存储数据
       const _save = (model) => {
@@ -25,7 +25,7 @@ module.exports = (rest) => {
 
       // 约定的 creatorId, 等于 req.user.id
       if (Model.rawAttributes.creatorId) attr.creatorId = req.user.id;
-      if (Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
+      if (!req.params.creatorName && Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
       // 约定的 clientIp, 等于rest.utils.clientIp(req)
       if (Model.rawAttributes.clientIp) attr.clientIp = rest.utils.clientIp(req);
 

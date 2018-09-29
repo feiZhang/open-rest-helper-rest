@@ -20,15 +20,15 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
   (req, res, next) => {
     const params = req.params;
     const options = opt ? req.hooks[opt] : U.findAllOpts(Model, req.params);
-    const countOpt = {};
+    // const countOpt = {};
     // 同时使用 findAllOpts生成条件，和手动传入条件。 
     if (_options) {
-      if (_options.order) options.order = options.order ? options.order.concat(_options.order) : _options.order;
+      if (_options.order) options.order = _options.order;
       if (_options.where) options.where = options.where ? Object.assign({}, options.where, _options.where) : _options.where;
     }
-    if (options.where) countOpt.where = options.where;
+    // if (options.where) countOpt.where = options.where;
     // 增加判定，是否引入include进行count
-    if (req.params.count_include && options.include) countOpt.include = options.include;
+    // if (req.params.count_include && options.include) countOpt.include = options.include;
     // 是否忽略总条目数，这样就可以不需要count了。在某些时候可以
     // 提高查询速度
     const ignoreTotal = req.params._ignoreTotal === 'yes';

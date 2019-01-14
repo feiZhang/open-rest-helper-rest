@@ -15,7 +15,7 @@ const remove = (hook) => (
       model.deletedAt = new Date();
       return model.save({ fields: deleteFields, validate: false });
     })().then(() => {
-      res.send(204);
+      res.send(200, { id: model.id });
       next();
     }).catch(next);
   }

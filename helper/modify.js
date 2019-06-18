@@ -4,8 +4,6 @@ const save = require('./save');
 const _ = require('lodash');
 
 module.exports = (rest) => {
-  const Sequelize = rest.Sequelize;
-
   /**
    * 修改某个资源描述的方法
    * Model 必选, Sequlize 定义的Model，表明数据的原型

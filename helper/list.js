@@ -14,17 +14,18 @@ const getTotal = (Model, opt, ignoreTotal, callback) => {
  * opt 是否要去req.hooks上去options
  * allowAttrs 那些字段是被允许的
  * hook 默认为空，如果指定了hook，则数据不直接输出而是先挂在 hook上
- * _options 同时使用 findAllOpts生成条件，和手动传入条件。  
+ * _options 同时使用 findAllOpts生成条件，和手动传入条件。
  */
 const list = (Model, opt, allowAttrs, hook, _options) => (
   (req, res, next) => {
     const params = req.params;
     const options = opt ? req.hooks[opt] : U.findAllOpts(Model, req.params);
     // const countOpt = {};
-    // 同时使用 findAllOpts生成条件，和手动传入条件。 
+    // 同时使用 findAllOpts生成条件，和手动传入条件。
     if (_options) {
       if (_options.order) options.order = _options.order;
       if (_options.where) options.where = options.where ? Object.assign({}, options.where, _options.where) : _options.where;
+      if (_options.raw != undefined) options.raw = _options.raw;
     }
     // if (options.where) countOpt.where = options.where;
     // 增加判定，是否引入include进行count

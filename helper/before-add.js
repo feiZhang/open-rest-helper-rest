@@ -20,12 +20,16 @@ module.exports = (rest) => {
         model.save().then((mod) => {
           req.hooks[hook] = mod;
           next();
-        }).catch((error) => next(rest.errors.sequelizeIfError(error)));
+        }).catch((error) => {
+          console.log(error);
+          next(rest.errors.sequelizeIfError(error))
+        });
       };
 
       // 约定的 creatorId, 等于 req.user.id
       if (Model.rawAttributes.creatorId) attr.creatorId = req.user.id;
       if (!req.params.creatorName && Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
+      if (!req.params.creatorDeptId && Model.rawAttributes.creatorDeptId) attr.creatorDeptId = (req.user.dept || {}).id || 0;
       // 约定的 clientIp, 等于rest.utils.clientIp(req)
       if (Model.rawAttributes.clientIp) attr.clientIp = rest.utils.clientIp(req);
 
@@ -45,7 +49,7 @@ module.exports = (rest) => {
       return Model.findOne({ where }).then((model) => {
         // 资源存在
         if (model) {
-          // 如果设置了唯一属性，并且开启回收站，则可以回收数据 
+          // 如果设置了唯一属性，并且开启回收站，则可以回收数据
           if (Model.rawAttributes.isDelete && model.isDelete === 'yes') {
             _.extend(model, attr);
             // 恢复为正常状态

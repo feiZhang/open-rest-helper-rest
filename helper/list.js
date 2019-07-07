@@ -19,7 +19,7 @@ const getTotal = (Model, opt, ignoreTotal, callback) => {
 const list = (Model, opt, allowAttrs, hook, _options) => (
   (req, res, next) => {
     const params = req.params;
-    const options = opt ? req.hooks[opt] : U.findAllOpts(Model, req.params);
+    const options = opt ? req.hooks[opt] : U.findAllOpts(Model, req.params, (_options || {}).isAll || req.params.isAll!==undefined);
     // const countOpt = {};
     // 同时使用 findAllOpts生成条件，和手动传入条件。
     if (_options) {

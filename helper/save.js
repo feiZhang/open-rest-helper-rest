@@ -27,6 +27,7 @@ module.exports = (rest) => {
         }
         next();
       }).catch((error) => {
+        console.log(error);
         next(rest.errors.sequelizeIfError(error));
       });
     }

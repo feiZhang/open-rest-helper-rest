@@ -35,23 +35,39 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
     const ignoreTotal = req.params._ignoreTotal === 'yes';
     // getTotal(Model, countOpt, ignoreTotal, (error, count) => {
     //   if (error) return next(error);
-    //   if (ignoreTotal || count) {
-        if (Array.isArray(allowAttrs) && allowAttrs.length > 0) options.attributes = allowAttrs;
-        return Model.findAndCountAll(options).then((result) => {
-          // let ls = U.listAttrFilter(result.rows, allowAttrs);
-          let ls = result.rows;
-          if (!ignoreTotal) res.header('X-Content-Record-Total', result.count);
-          if (params.attrs) {
-            ls = U.listAttrFilter(ls, params.attrs.split(','));
-          }
-          if (hook) {
-            req.hooks[hook] = ls;
-          } else {
-            res.send(ls);
-          }
-          next();
-        }).catch(next);
-    //   }
+    if (ignoreTotal) {
+      if (Array.isArray(allowAttrs) && allowAttrs.length > 0) options.attributes = allowAttrs;
+      return Model.findAll(options).then((result) => {
+        // let ls = U.listAttrFilter(result.rows, allowAttrs);
+        let ls = result;
+        if (!ignoreTotal) res.header('X-Content-Record-Total', 0);
+        if (params.attrs) {
+          ls = U.listAttrFilter(ls, params.attrs.split(','));
+        }
+        if (hook) {
+          req.hooks[hook] = ls;
+        } else {
+          res.send(ls);
+        }
+        next();
+      }).catch(next);
+    } else {
+      if (Array.isArray(allowAttrs) && allowAttrs.length > 0) options.attributes = allowAttrs;
+      return Model.findAndCountAll(options).then((result) => {
+        // let ls = U.listAttrFilter(result.rows, allowAttrs);
+        let ls = result.rows;
+        if (!ignoreTotal) res.header('X-Content-Record-Total', result.count);
+        if (params.attrs) {
+          ls = U.listAttrFilter(ls, params.attrs.split(','));
+        }
+        if (hook) {
+          req.hooks[hook] = ls;
+        } else {
+          res.send(ls);
+        }
+        next();
+      }).catch(next);
+    }
     //   res.header('X-Content-Record-Total', 0);
     //   if (hook) {
     //     req.hooks[hook] = [];

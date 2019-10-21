@@ -13,7 +13,7 @@ module.exports = (rest) => {
    */
   const beforeAdd = (Model, cols, hook) => (
     (req, res, next) => {
-      let attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
+      const attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
 
       // 存储数据
       const _save = (model) => {

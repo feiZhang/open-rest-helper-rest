@@ -36,7 +36,7 @@ module.exports = (rest) => {
       const origParams = _.clone(req.params);
       const handler = (params, callback) => {
         req.params = _.extend(params, origParams);
-        let attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
+        const attr = U.pickParams(req, cols || Model.writableCols || _.keys(Model.rawAttributes), Model);
         if (Model.rawAttributes.creatorId) attr.creatorId = req.user.id;
         if (!req.params.creatorName && Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
         if (!req.params.creatorDeptId && Model.rawAttributes.creatorDeptId) attr.creatorDeptId = (req.user.dept || {}).id || 0;

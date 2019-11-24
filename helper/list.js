@@ -40,7 +40,7 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
       return Model.findAll(options).then((result) => {
         // let ls = U.listAttrFilter(result.rows, allowAttrs);
         let ls = result;
-        if (!ignoreTotal) res.header('X-Content-Record-Total', 0);
+        if (!ignoreTotal) res.header('X-Content-Record-Total', 'no');
         if (params.attrs) {
           ls = U.listAttrFilter(ls, params.attrs.split(','));
         }

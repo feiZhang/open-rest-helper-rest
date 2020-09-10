@@ -3,8 +3,6 @@ const U = require('../lib/utils');
 const _ = require('lodash');
 
 module.exports = (rest) => {
-  const Sequelize = rest.Sequelize;
-
   /**
    * 修改某个资源描述的前置方法, 不会sync到数据库
    * Model 必选, Sequlize 定义的Model，表明数据的原型

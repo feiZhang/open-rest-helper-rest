@@ -26,6 +26,7 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
       if (_options.order) options.order = _options.order;
       if (_options.where) options.where = options.where ? Object.assign({}, options.where, _options.where) : _options.where;
       if (_options.raw != undefined) options.raw = _options.raw;
+      if (_options.paranoid != undefined) options.paranoid = _options.paranoid;
     }
     // if (options.where) countOpt.where = options.where;
     // 增加判定，是否引入include进行count

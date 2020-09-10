@@ -24,7 +24,10 @@ module.exports = (rest) => {
 
     return (req, res, next) => {
       before(req, res, (error) => {
-        if (error) return next(error);
+        if (error) {
+          console.log('add', error);
+          return next(error);
+        }
         // 如果传入了hook。那么就不直接输出，如何输出数据，由客户代码获得hook数据后，自主输出。
         if (hook) {
           next();
@@ -82,4 +85,3 @@ module.exports = (rest) => {
 
   return delegate(add, schemas);
 };
-

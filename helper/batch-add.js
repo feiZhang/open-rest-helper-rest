@@ -40,6 +40,7 @@ module.exports = (rest) => {
         if (Model.rawAttributes.creatorId) attr.creatorId = req.user.id;
         if (!req.params.creatorName && Model.rawAttributes.creatorName) attr.creatorName = req.user.name;
         if (!req.params.creatorDeptId && Model.rawAttributes.creatorDeptId) attr.creatorDeptId = (req.user.dept || {}).id || 0;
+        if (!req.params.creatorDeptName && Model.rawAttributes.creatorDeptName) attr.creatorDeptName = (req.user.dept || {}).name || '';
         if (Model.rawAttributes.clientIp) attr.clientIp = rest.utils.clientIp(req);
 
         /** 构建实例 */

@@ -24,6 +24,8 @@ const list = (Model, opt, allowAttrs, hook, _options) => (
     // 同时使用 findAllOpts生成条件，和手动传入条件。
     if (_options) {
       if (_options.order) options.order = _options.order;
+      if (_options.group) options.group = _options.group;
+      if (_options.limit) options.limit = _options.limit;
       if (_options.where) options.where = options.where ? Object.assign({}, options.where, _options.where) : _options.where;
       if (_options.raw != undefined) options.raw = _options.raw;
       if (_options.paranoid != undefined) options.paranoid = _options.paranoid;
@@ -96,20 +98,6 @@ module.exports = (rest) => {
     name: 'allowAttrs',
     type: Array,
     allowNull: true,
-    validate: {
-      check(keys, schema, args) {
-        const Model = args[0];
-        _.each(keys, (v) => {
-          if (!_.isString(v)) {
-            throw Error('Every item in allowAttrs must be a string.');
-          }
-          if (!Model.rawAttributes[v]) {
-            throw Error(`Attr non-exists: ${v}`);
-          }
-        });
-        return true;
-      },
-    },
     message: 'Allow return attrs\'s name array',
   }, {
     name: 'hook',

@@ -31,6 +31,7 @@ const list = (Model, opt, allowAttrs, hook, _options) => (req, res, next) => {
         if (_options.order) options.order = _options.order;
         if (_options.group) options.group = _options.group;
         if (_options.limit) options.limit = _options.limit;
+        if (_options.distinct) options.distinct = _options.distinct;
         if (_options.where)
             options.where = options.where
                 ? Object.assign({}, options.where, _options.where)

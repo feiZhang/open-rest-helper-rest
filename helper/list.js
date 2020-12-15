@@ -22,8 +22,8 @@ const list = (Model, opt, allowAttrs, hook, _options) => (req, res, next) => {
         ? req.hooks[opt]
         : U.findAllOpts(
               Model,
-              req.params,
-              (_options || {}).isAll || req.params.isAll !== undefined
+              params,
+              (_options || {}).isAll || params.isAll !== undefined
           );
     // const countOpt = {};
     // 同时使用 findAllOpts生成条件，和手动传入条件。
@@ -40,12 +40,13 @@ const list = (Model, opt, allowAttrs, hook, _options) => (req, res, next) => {
         if (_options.paranoid != undefined)
             options.paranoid = _options.paranoid;
     }
+
     // if (options.where) countOpt.where = options.where;
     // 增加判定，是否引入include进行count
-    // if (req.params.count_include && options.include) countOpt.include = options.include;
+    // if (params.count_include && options.include) countOpt.include = options.include;
     // 是否忽略总条目数，这样就可以不需要count了。在某些时候可以
     // 提高查询速度
-    const ignoreTotal = req.params._ignoreTotal === "yes";
+    const ignoreTotal = params._ignoreTotal === "yes";
     // getTotal(Model, countOpt, ignoreTotal, (error, count) => {
     //   if (error) return next(error);
     if (ignoreTotal) {
